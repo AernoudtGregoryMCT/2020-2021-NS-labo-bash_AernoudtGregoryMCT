@@ -1,0 +1,19 @@
+zone "$1" {
+        type master;
+        file "/etc/bind/domain-enabled/$1.db";
+};
+EOF
+cat <<EOF >/etc/bind/domain-enabled/$1.db
+\$TTL   604800
+@       IN      SOA     ns1.$1. root.localhost. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      ns1.$1.
+@       IN      A       $2
+ns1     IN      A       $2
+EOF
+rndc reload
